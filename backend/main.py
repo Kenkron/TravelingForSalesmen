@@ -1,13 +1,12 @@
 import json
 from numbers import Real
-
 from flask import Flask
 from flask import request
 from flask import abort
-
 import min_span as min_span_lib
 
 app = Flask(__name__)
+
 
 def validate_point_list(data):
     """
@@ -27,10 +26,14 @@ def validate_point_list(data):
         tuple_points.append(tuple(p))
     return tuple_points
 
+
 @app.route("/ping")
 def route_ping():
-    print("ping")
+    """
+    Returns 200 to show the server is up
+    """
     return ""
+
 
 @app.route("/min_span")
 def route_min_span():
@@ -43,6 +46,7 @@ def route_min_span():
     data = json_data["points"]
     points = validate_point_list(data)
     return {"edges": min_span_lib.min_span_c(points)}
+
 
 @app.route("/traveling_salesman")
 def route_traveling_salesman():
@@ -58,5 +62,6 @@ def route_traveling_salesman():
     return json.dumps(
         {"path": min_span_lib.traveling_salesman_from_edges(points)})
 
-if __name__ == "__main__": # pragma: no cover
+
+if __name__ == "__main__":  # pragma: no cover
     app.run()

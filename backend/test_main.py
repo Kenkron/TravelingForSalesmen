@@ -2,6 +2,7 @@ import json
 import unittest
 from main import app
 
+
 class AppTests(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
@@ -77,7 +78,7 @@ class AppTests(unittest.TestCase):
             follow_redirects=True,
             content_type="application/json")
         self.assertEqual(response.status_code, 400, msg)
-        
+
         msg = "input without points should throw a 422"
         response = self.app.get(
             "/min_span",
@@ -94,7 +95,7 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422, msg)
 
         msg = "input with points as a non-list should throw a 422"
-        points = { "x": [0, 1], "y": [0, 1] }
+        points = {"x": [0, 1], "y": [0, 1]}
         response = self.app.get(
             "/min_span",
             follow_redirects=True,
@@ -123,7 +124,7 @@ class AppTests(unittest.TestCase):
             content_type="application/json",
             data=json.dumps({"points": points}))
         self.assertEqual(response.status_code, 422, msg)
-        
+
         msg = "input with non-2d points should throw a 422"
         points = [
             [0, 0, 0],
@@ -182,7 +183,7 @@ class AppTests(unittest.TestCase):
             follow_redirects=True,
             content_type="application/json")
         self.assertEqual(response.status_code, 400, msg)
-        
+
         msg = "input without points should throw a 422"
         response = self.app.get(
             "/traveling_salesman",
@@ -192,7 +193,7 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422, msg)
 
         msg = "input with points as a non-list should throw a 422"
-        points = { "x": [0, 1], "y": [0, 1] }
+        points = {"x": [0, 1], "y": [0, 1]}
         response = self.app.get(
             "/traveling_salesman",
             follow_redirects=True,
@@ -221,7 +222,7 @@ class AppTests(unittest.TestCase):
             content_type="application/json",
             data=json.dumps({"points": points}))
         self.assertEqual(response.status_code, 422, msg)
-        
+
         msg = "input with non-2d points should throw a 422"
         points = [
             [0, 0, 0],
@@ -232,6 +233,7 @@ class AppTests(unittest.TestCase):
             content_type="application/json",
             data=json.dumps({"points": points}))
         self.assertEqual(response.status_code, 422, msg)
+
 
 if __name__ == "__main__":
     unittest.main()
