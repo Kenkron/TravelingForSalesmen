@@ -162,7 +162,7 @@ def remove_duplicates(points):
     return new_points
 
 
-def traveling_salesman_from_edges(points):
+def traveling_salesman_from_edges(original_points):
     """
     Provides an approximation of the travelling salesman
     problem based on the minimum spanning tree. This is
@@ -170,14 +170,13 @@ def traveling_salesman_from_edges(points):
     actual solution.
     """
 
-    for i in range(len(points)):
-        points[i] = (int(points[i][0] * 100), int(points[i][1] * 100))
+    points = [(int(p[0] * 100), int(p[1] * 100)) for p in original_points]
 
     points = remove_duplicates(points)
 
     # < 3 points are already an optimal path
     if len(points) < 3:
-        return points
+        return [(p[0]/100, p[1]/100) for p in points]
 
     min_span_edges = min_span_c(points)
 
@@ -196,19 +195,14 @@ def traveling_salesman_from_edges(points):
     while len(graph[start]) > 1:
         start += 1
 
-    print(start)
     path = [start]
     # Set will have fast lookups
     added = {points[start]}
     # Start walking at any adjacent point
     previous = start
-    print(start)
-    print(previous)
     walker = graph[previous][0]
     # The walker will always follow the left-most path
     while len(path) < len(points):
-        print("Step: " + str(len(path)))
-        print(previous, walker)
         backwards = get_direction(points[walker], points[previous])
         next_step = graph[walker][0]
         for adjacent in graph[walker]:
@@ -222,7 +216,7 @@ def traveling_salesman_from_edges(points):
         previous = walker
         walker = next_step
 
-    path_points = [(points[p][0] * 0.01, points[p][1] * 0.01) for p in path]
+    path_points = [(points[p][0]/100, points[p][1]/100) for p in path]
     clean_path(path_points)
     return path_points
 
