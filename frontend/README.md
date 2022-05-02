@@ -1,8 +1,17 @@
 # frontend
 
 ## Project setup
+
 ```
 npm install
+```
+
+create src/config.js
+
+```
+module.exports = {
+	api: "http://localhost:5000"
+}
 ```
 
 ### Compiles and hot-reloads for development
