@@ -36,7 +36,7 @@ def route_ping():
     return ""
 
 
-@app.route("/min_span", methods=['GET', 'POST'])
+@app.route("/min_span", methods=['POST'])
 def route_min_span():
     """
     Runs a minimum spanning tree for a list of points
@@ -49,7 +49,7 @@ def route_min_span():
     return {"edges": min_span_lib.min_span_c(points)}
 
 
-@app.route("/traveling_salesman", methods=['GET', 'POST'])
+@app.route("/traveling_salesman", methods=['POST'])
 def route_traveling_salesman():
     """
     Finds an approximate solution to the traveling

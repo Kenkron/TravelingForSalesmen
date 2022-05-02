@@ -22,7 +22,7 @@ class AppTests(unittest.TestCase):
             [1, 1]]
         # Order is not important here
         expected_as_set = {0, 1}
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -36,7 +36,7 @@ class AppTests(unittest.TestCase):
         msg = "empty input should produce empty output"
         points = []
         expected = []
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -47,7 +47,7 @@ class AppTests(unittest.TestCase):
         msg = "input with a single point should produce empty output"
         points = [[0, 0]]
         expected = []
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -61,7 +61,7 @@ class AppTests(unittest.TestCase):
             [0, 0]]
         # Order is not important here
         expected_as_set = {0, 1}
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -73,21 +73,21 @@ class AppTests(unittest.TestCase):
         self.assertEqual(set(edge), expected_as_set, msg)
 
         msg = "input without data should throw a 400"
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json")
         self.assertEqual(response.status_code, 400, msg)
 
         msg = "input without points should throw a 422"
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
             data=json.dumps({}))
         self.assertEqual(response.status_code, 422, msg)
 
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -96,7 +96,7 @@ class AppTests(unittest.TestCase):
 
         msg = "input with points as a non-list should throw a 422"
         points = {"x": [0, 1], "y": [0, 1]}
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -107,7 +107,7 @@ class AppTests(unittest.TestCase):
         points = [
             {"x": 0, "y": 0},
             {"x": 1, "y": 1}]
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -118,7 +118,7 @@ class AppTests(unittest.TestCase):
         points = [
             ["0", "0"],
             ["1", "1"]]
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -129,7 +129,7 @@ class AppTests(unittest.TestCase):
         points = [
             [0, 0, 0],
             [1, 1, 1]]
-        response = self.app.get(
+        response = self.app.post(
             "/min_span",
             follow_redirects=True,
             content_type="application/json",
@@ -144,7 +144,7 @@ class AppTests(unittest.TestCase):
             [1, 1]]
         # Order is not important here
         expected_as_set = {(0, 0), (1, 1)}
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -158,7 +158,7 @@ class AppTests(unittest.TestCase):
         msg = "input with no points should respond with an empty path"
         points = []
         expected = []
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -169,7 +169,7 @@ class AppTests(unittest.TestCase):
         msg = "input with only one point should respond with that point"
         points = [[1, 2]]
         expected = [[1, 2]]
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -178,14 +178,14 @@ class AppTests(unittest.TestCase):
         self.assertEqual(output["path"], expected, msg)
 
         msg = "input without data should throw a 400"
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json")
         self.assertEqual(response.status_code, 400, msg)
 
         msg = "input without points should throw a 422"
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -194,7 +194,7 @@ class AppTests(unittest.TestCase):
 
         msg = "input with points as a non-list should throw a 422"
         points = {"x": [0, 1], "y": [0, 1]}
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -205,7 +205,7 @@ class AppTests(unittest.TestCase):
         points = [
             {"x": 0, "y": 0},
             {"x": 1, "y": 1}]
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -216,7 +216,7 @@ class AppTests(unittest.TestCase):
         points = [
             ["0", "0"],
             ["1", "1"]]
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
@@ -227,7 +227,7 @@ class AppTests(unittest.TestCase):
         points = [
             [0, 0, 0],
             [1, 1, 1]]
-        response = self.app.get(
+        response = self.app.post(
             "/traveling_salesman",
             follow_redirects=True,
             content_type="application/json",
