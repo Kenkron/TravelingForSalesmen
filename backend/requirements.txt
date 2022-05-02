@@ -9,5 +9,6 @@ MarkupSafe==2.1.1
 mccabe==0.6.1
 pycodestyle==2.8.0
 pyflakes==2.4.0
+waitress==2.1.1
 Werkzeug==2.1.2
 zipp==3.8.0
