@@ -1,11 +1,12 @@
-import json
 from numbers import Real
 from flask import Flask
 from flask import request
 from flask import abort
+from flask_cors import CORS
 import min_span as min_span_lib
 
 app = Flask(__name__)
+CORS(app)
 
 
 def validate_point_list(data):
@@ -35,7 +36,7 @@ def route_ping():
     return ""
 
 
-@app.route("/min_span")
+@app.route("/min_span", methods=['GET', 'POST'])
 def route_min_span():
     """
     Runs a minimum spanning tree for a list of points
@@ -48,13 +49,13 @@ def route_min_span():
     return {"edges": min_span_lib.min_span_c(points)}
 
 
-@app.route("/traveling_salesman")
+@app.route("/traveling_salesman", methods=['GET', 'POST'])
 def route_traveling_salesman():
     """
     Finds an approximate solution to the traveling
     salesman problem for a list of points
     """
-    json_data = request.get_json(force=True)
+    json_data = request.get_json()
     if "points" not in json_data:
         return abort(422, "points not found")
     data = json_data["points"]
