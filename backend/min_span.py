@@ -170,6 +170,9 @@ def traveling_salesman_from_edges(points):
     actual solution.
     """
 
+    for i in range(len(points)):
+        points[i] = (int(points[i][0] * 100), int(points[i][1] * 100))
+
     points = remove_duplicates(points)
 
     # < 3 points are already an optimal path
@@ -193,14 +196,19 @@ def traveling_salesman_from_edges(points):
     while len(graph[start]) > 1:
         start += 1
 
+    print(start)
     path = [start]
     # Set will have fast lookups
     added = {points[start]}
     # Start walking at any adjacent point
     previous = start
+    print(start)
+    print(previous)
     walker = graph[previous][0]
     # The walker will always follow the left-most path
     while len(path) < len(points):
+        print("Step: " + str(len(path)))
+        print(previous, walker)
         backwards = get_direction(points[walker], points[previous])
         next_step = graph[walker][0]
         for adjacent in graph[walker]:
@@ -214,7 +222,7 @@ def traveling_salesman_from_edges(points):
         previous = walker
         walker = next_step
 
-    path_points = [points[p] for p in path]
+    path_points = [(points[p][0] * 0.01, points[p][1] * 0.01) for p in path]
     clean_path(path_points)
     return path_points
 
