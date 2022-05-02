@@ -1,0 +1,6 @@
+*.dll
+*.o
+*.so
+
+venv
+__pycache__
