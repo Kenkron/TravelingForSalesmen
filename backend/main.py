@@ -59,8 +59,12 @@ def route_traveling_salesman():
         return abort(422, "points not found")
     data = json_data["points"]
     points = validate_point_list(data)
-    return json.dumps(
-        {"path": min_span_lib.traveling_salesman_from_edges(points)})
+    return {
+        "path": min_span_lib.traveling_salesman_from_edges(points)}
+
+
+def get_app():  # pragma: no cover
+    return app
 
 
 if __name__ == "__main__":  # pragma: no cover
