@@ -8,9 +8,12 @@ should be O(1) Thus, there should be a performance
 benefit to running a minimum spanning tree in C.
 """
 
+import ctypes
 import math
+import platform
 
-def min_span_py(points): # pragma: no-cover
+
+def min_span_py(points):  # pragma: no-cover
     """
     Python implementation of minimum spanning tree
 
@@ -31,6 +34,7 @@ def min_span_py(points): # pragma: no-cover
     This algorithm is designed to mirror the C
     implementation in min_span.c.
     """
+    global edge_color
     edges = []
     edge_color = (255, 0, 0)
     groups = []
@@ -50,9 +54,10 @@ def min_span_py(points): # pragma: no-cover
         for i in range(len(points)):
             for j in range(i, len(points)):
                 # a^2 + b^2 = c^2
-                dist2 =  (points[i][0] - points[j][0])**2
+                dist2 = (points[i][0] - points[j][0])**2
                 dist2 += (points[i][1] - points[j][1])**2
-                if (min_edge_2 == -1 or dist2 < min_edge_2) and groups[i] != groups[j]:
+                better_min_edge = (min_edge_2 == -1 or dist2 < min_edge_2)
+                if better_min_edge and groups[i] != groups[j]:
                     min_edge_2 = dist2
                     min_edge_i = i
                     min_edge_j = j
@@ -64,18 +69,17 @@ def min_span_py(points): # pragma: no-cover
                 groups[i] = groupi
     return edges
 
-import ctypes
-import sys
-import platform
+
 min_span_lib = None
-if platform.system() == "Linux": # pragma: no-cover
+if platform.system() == "Linux":  # pragma: no-cover
     min_span_lib = ctypes.CDLL('./native/native_min_span.so')
-if platform.system() == "Windows": # pragma: no-cover
+if platform.system() == "Windows":  # pragma: no-cover
     min_span_lib = ctypes.CDLL('./native/native_min_span.dll')
 min_span_lib.min_span.argtypes = (ctypes.c_int, ctypes.POINTER(ctypes.c_int))
 min_span_lib.min_span.restype = ctypes.POINTER(ctypes.c_int)
 min_span_lib.free_data.argtypes = [ctypes.c_void_p]
 min_span_lib.free_data.restype = None
+
 
 def min_span_c(points):
     """
@@ -97,7 +101,8 @@ def min_span_c(points):
 
     array_type = ctypes.c_int * len(pointVals)
 
-    output = min_span_lib.min_span(ctypes.c_int(n_points), array_type(*pointVals))
+    c_int_type = ctypes.c_int(n_points)
+    output = min_span_lib.min_span(c_int_type, array_type(*pointVals))
 
     edges = []
     for i in range(n_points - 1):
@@ -107,7 +112,8 @@ def min_span_c(points):
     min_span_lib.free_data(free_pointer)
     return edges
 
-def get_direction(a, b = (0,0)):
+
+def get_direction(a, b=(0, 0)):
     """
     Gets a unit vector pointing to a from b
     """
@@ -115,17 +121,20 @@ def get_direction(a, b = (0,0)):
     length = (difference[0]**2 + difference[1]**2)**0.5
     return (difference[0]/length, difference[1]/length)
 
+
 def dot(a, b):
     """
     Returns the dot product of two 2d vectors
     """
     return a[0] * b[0] + a[1] * b[1]
 
+
 def cross(a, b):
     """
     Returns the 2d cross product of two vectors
     """
     return a[0] * b[1] - b[0] * a[1]
+
 
 def angle(a, b):
     """
@@ -135,6 +144,7 @@ def angle(a, b):
     if math.pi * 2 - angle < 0.0000001:
         return 0
     return angle
+
 
 def remove_duplicates(points):
     """
@@ -151,6 +161,7 @@ def remove_duplicates(points):
             new_points.append(p)
     return new_points
 
+
 def traveling_salesman_from_edges(points):
     """
     Provides an approximation of the travelling salesman
@@ -160,7 +171,7 @@ def traveling_salesman_from_edges(points):
     """
 
     points = remove_duplicates(points)
-    
+
     # < 3 points are already an optimal path
     if len(points) < 3:
         return points
@@ -180,8 +191,8 @@ def traveling_salesman_from_edges(points):
     # Start with a single segment of the tree
     start = 0
     while len(graph[start]) > 1:
-        start += 1;
-    
+        start += 1
+
     path = [start]
     # Set will have fast lookups
     added = {points[start]}
@@ -195,7 +206,6 @@ def traveling_salesman_from_edges(points):
         for adjacent in graph[walker]:
             forwards = get_direction(points[adjacent], points[walker])
             to_next_step = get_direction(points[next_step], points[walker])
-            
             if angle(backwards, forwards) > angle(backwards, to_next_step):
                 next_step = adjacent
         if points[walker] not in added:
@@ -203,10 +213,11 @@ def traveling_salesman_from_edges(points):
             added.add(points[walker])
         previous = walker
         walker = next_step
-    
+
     path_points = [points[p] for p in path]
     clean_path(path_points)
     return path_points
+
 
 def segments_intersect(a, b, c, d):
     """
@@ -237,13 +248,14 @@ def segments_intersect(a, b, c, d):
         0 <= u and
         u <= 1)
 
+
 def clean_path(points):
     """
     Removes crossing segments of a path.
     This mutates the input, and also returns it
     for chaining.
 
-    It works by switching the second point of the 
+    It works by switching the second point of the
     first segment with the first point of the second
     segment, repeating until there are no more overlaps.
 
@@ -262,7 +274,6 @@ def clean_path(points):
                 c = points[j]
                 d = points[(j + 1) % len(points)]
                 if segments_intersect(a, b, c, d):
-                    tmp = points[i]
                     points[(i + 1) % len(points)] = c
                     points[j] = b
                     cleared = False
