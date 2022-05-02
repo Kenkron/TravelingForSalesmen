@@ -28,6 +28,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+    - name: Build native dependencies
+      working-directory: backend/native
+      run: |
+        make
     - name: Lint with flake8
       working-directory: backend
       run: |
