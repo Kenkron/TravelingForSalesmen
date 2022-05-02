@@ -10,7 +10,7 @@ benefit to running a minimum spanning tree in C.
 
 import math
 
-def min_span_py(points):
+def min_span_py(points): # pragma: no-cover
     """
     Python implementation of minimum spanning tree
 
@@ -68,9 +68,9 @@ import ctypes
 import sys
 import platform
 min_span_lib = None
-if platform.system() == "Linux":
+if platform.system() == "Linux": # pragma: no-cover
     min_span_lib = ctypes.CDLL('./native/native_min_span.so')
-if platform.system() == "Windows":
+if platform.system() == "Windows": # pragma: no-cover
     min_span_lib = ctypes.CDLL('./native/native_min_span.dll')
 min_span_lib.min_span.argtypes = (ctypes.c_int, ctypes.POINTER(ctypes.c_int))
 min_span_lib.min_span.restype = ctypes.POINTER(ctypes.c_int)

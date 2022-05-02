@@ -15,8 +15,7 @@ def validate_point_list(data):
     it as a list of tuples.
     """
     if type(data) is not list:
-        abort(422, "data is not a list")
-        return
+        return abort(422, "data is not a list")
     tuple_points = []
     for p in data:
         if type(p) is not list:
@@ -59,5 +58,5 @@ def route_traveling_salesman():
     return json.dumps(
         {"path": min_span_lib.traveling_salesman_from_edges(points)})
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     app.run()

@@ -86,6 +86,13 @@ class AppTests(unittest.TestCase):
             data=json.dumps({}))
         self.assertEqual(response.status_code, 422, msg)
 
+        response = self.app.get(
+            "/min_span",
+            follow_redirects=True,
+            content_type="application/json",
+            data=json.dumps({}))
+        self.assertEqual(response.status_code, 422, msg)
+
         msg = "input with points as a non-list should throw a 422"
         points = { "x": [0, 1], "y": [0, 1] }
         response = self.app.get(
@@ -110,6 +117,17 @@ class AppTests(unittest.TestCase):
         points = [
             ["0", "0"],
             ["1", "1"]]
+        response = self.app.get(
+            "/min_span",
+            follow_redirects=True,
+            content_type="application/json",
+            data=json.dumps({"points": points}))
+        self.assertEqual(response.status_code, 422, msg)
+        
+        msg = "input with non-2d points should throw a 422"
+        points = [
+            [0, 0, 0],
+            [1, 1, 1]]
         response = self.app.get(
             "/min_span",
             follow_redirects=True,
@@ -197,6 +215,17 @@ class AppTests(unittest.TestCase):
         points = [
             ["0", "0"],
             ["1", "1"]]
+        response = self.app.get(
+            "/traveling_salesman",
+            follow_redirects=True,
+            content_type="application/json",
+            data=json.dumps({"points": points}))
+        self.assertEqual(response.status_code, 422, msg)
+        
+        msg = "input with non-2d points should throw a 422"
+        points = [
+            [0, 0, 0],
+            [1, 1, 1]]
         response = self.app.get(
             "/traveling_salesman",
             follow_redirects=True,
